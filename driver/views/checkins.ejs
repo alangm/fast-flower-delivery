@@ -1,0 +1,18 @@
+
+<div class="row">
+<div class="well">
+	<p>
+	  <% if(self) {%>
+			<h3>Showing the last <strong>5</strong> of <strong><%= count %></strong> checkins<hr></h3>
+	    <% for(var i=0; i<5; i++) { %>
+	      <ul>
+					<li><strong>Name</strong>: <%= removeQuotes(items[i].venue.name) %><br></li>
+					<li><strong>Location</strong>: <%= removeQuotes(items[i].venue.location.address) %><br></li>
+	      </ul>
+			<% } %>
+	  <% } else {%>
+	    <strong>You may only view your own check in information</strong><br>
+	  <% } %>
+	</p>
+</div>
+</div>

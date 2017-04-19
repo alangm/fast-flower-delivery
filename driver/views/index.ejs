@@ -1,0 +1,146 @@
+<%- include partials/header %>
+<%- include partials/navbar %>
+
+<div class="container text-center" style='margin-top:5em' >
+<div class="col-lg-20">
+
+
+
+
+
+
+
+
+  <% if(user) { %>
+    	<div class="page-header">
+        <h1>Welcome, <%= removeQuotes(user.fs.firstName) %>!</h1>
+    	</div>
+
+    	<div class="row">
+          <div class="col-sm-6">
+      			<div class="well">
+      				<h3><span class="fa fa-user"></span> <%= removeQuotes(user.fs.firstName) %> <%= removeQuotes(user.fs.lastName) %></h3>
+      					<p>
+      						<strong>id</strong>: <%= user.fs.id %><br>
+      						<strong>email</strong>: <%= removeQuotes(user.fs.email) %><br>
+                  <!-- Z<strong>view checkins</strong>: <a href='/user/checkins?token=<%= user.fs.token %>&id=<%= user.fs.id %>'>Checkins</a> -->
+      					</p>
+      			</div>
+          </div>
+          <div class="col-sm-6">
+          	<div class="well">
+              <iframe src='/user/checkins?token=<%= user.fs.token %>&id=<%= user.fs.id %>' style='border:none;' width='100%' height='320em'></iframe>
+            </div>
+          </div>
+    	</div>
+
+      <div class='row'>
+			<div class="col-sm-6">
+				<div class="well">
+					<h4>Pending Orders:</h4><hr>
+					    <% for(var i=0; i<orders.length; i++) { %>
+								<% if(orders[i].status == "pending") { %>
+								<div class='row text-left'>
+
+                  <div id='<%= i %>'>
+  									<div class="col-sm-8">
+                      <div name="shop"><h4><%= orders[i].from%></h4></div>
+                        Deliver To <strong name="name"><%= orders[i].name %></strong><br>
+                        <ul><li name="location"><%= orders[i].location %></li></ul?<br>
+  									</div>
+  									<div class="col-sm-4">
+  										<p class="text-right">
+  											<button onclick="handleClick('<%= orders[i]._id %>', '<%= orders[i].from %>', '<%= orders[i].name %>', '<%= orders[i].location %>')" class="btn btn-success btn-md">Accept</button>
+  										</p>
+  									</div>
+                  </div>
+
+								</div><hr>
+							<% } %>
+						<% } %>
+					</p>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="well">
+					<h4>My Outstanding Orders:</h4><hr>
+					    <% for(var i=0; i<orders.length; i++) { %>
+  							<% if(orders[i].driver == removeQuotes(user.fs.firstName)) { %>
+  								<div class='row  text-left'>
+  									<div class="col-sm-8">
+  							      <ul>
+  											<li><strong>Deliver To</strong>: <%= orders[i].name %><br></li>
+  											<li><strong>Location</strong>: <%= orders[i].location %><br></li>
+  											<li><strong>Status</strong>: <%= orders[i].status %><br></li>
+  							      </ul>
+  									</div>
+    									<div class="col-sm-4">
+    										<p class="text-right">
+    											<button onclick="handleCompletion('<%= orders[i]._id %>','<%= orders[i].name %>')" class="btn btn-danger btn-md">Delivered</button>
+    										</p>
+    									</div>
+  								</div><hr>
+							<% } %>
+						<% } %>
+					</p>
+				</div>
+			</div>
+		</div>
+
+
+    <input name="driver" style='display:none;' value=<%= removeQuotes(user.fs.firstName) %> />
+
+
+        <script src="/socket.io/socket.io.js"></script>
+    		<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    		<script>
+          var handleClick = function(id, shop, name, location) {
+            var socket = io();
+            socket.emit('driver_accepted_order', {
+              driver   : $('[name="driver"]').val(),
+              from     : shop,
+              name     : name,
+              location : location,
+              status   : 'enroute'
+            });
+            //window.location = "/order/accept?orderID="+id;
+          };
+
+          var handleCompletion = function(id, name) {
+            console.log('about to change order status');
+            var socket = io();
+            socket.emit('order_status_changed', {
+              id   : id,
+              name : name,
+              status : 'done'
+            });
+          };
+
+          var socket = io.connect('https://35.161.219.103/');
+          socket.on('refresh_view', function () {
+            console.log('refreshing');
+            window.location = '/';
+          });
+    		</script>
+
+
+  <% } else { %>
+    <div class"text-center">
+    	<div class="page-header">
+        <h1>Welcome!</h1>
+        <p class="lead bg-warning">You are currently logged out.</p><br><br>
+    	</div>
+      <a href="/auth/fs" class="btn btn-info btn-lg">Login with Foursquare</a>
+      <hr>
+    </div>
+
+  <% } %>
+
+
+
+</div>
+</div>
+
+
+
+<%- include partials/footer %>

@@ -1,0 +1,25 @@
+{
+  "name": "node-authentication",
+  "main": "server.js",
+  "dependencies": {
+    "bcrypt-nodejs": "latest",
+    "colors": "~1.1.2",
+    "connect-flash": "~0.1.1",
+    "ejs": "~0.8.5",
+    "express": "~3.4.4",
+    "express-sslify": "~1.2.0",
+    "mongoose": "~3.8.1",
+    "node-foursquare": "~0.3.0",
+    "node-uuid": "~1.4.7",
+    "passport": "~0.1.17",
+    "passport-foursquare-token": "~2.1.0",
+    "passport-local": "~0.1.6",
+    "request": "~2.80.0",
+    "rootpath": "~0.1.2",
+    "socket.io": "^1.7.3",
+    "socket.io-client": "^1.7.3",
+    "socket.io-emitter": "^2.0.0",
+    "socket.io-redis": "^4.0.0",
+    "webworker-threads": "~0.7.11"
+  }
+}

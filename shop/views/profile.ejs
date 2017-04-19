@@ -1,0 +1,111 @@
+
+<%- include partials/header %>
+<%- include partials/navbar %>
+
+
+<div class="container" style="margin-top:5em;">
+
+	<div class="row">
+
+		<!-- LOCAL INFORMATION -->
+		<div class="col-sm-4">
+			<div class="well">
+				<h3>Shop Profile</h3>
+				<p>
+					<strong>Name</strong>:&nbsp;&nbsp;<%= user.local.email %><br>
+					<strong>ID</strong>:&nbsp;&nbsp;<%= user._id %><br>
+				</p>
+			</div>
+		</div>
+		<div class="col-sm-8">
+
+			<div id="c" class="container"></div>
+
+			<div class="well">
+				<h2><label>Create a new order</label></h3>
+				<form action="/order/new" method="post">
+					<div class="form-group">
+						<input type="text" class="form-control" name="name" placeholder="Customer Name"><br>
+						<input type="text" class="form-control" name="location" placeholder="Address"><br>
+						<input type="text" class="form-control" name="note" placeholder="Notes">
+					</div>
+					<div class="text-right">
+						<button type="submit" class="btn btn-inverse btn-md btn-right"><strong>Create</strong></button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class='row'>
+			<div class="col-sm-12">
+				<div class="well">
+					<h3>My Orders:</h3><hr>
+					    <% for(var i=0; i<orders.length; i++) { %>
+								<% if(orders[i].from == user.local.email) { %>
+								<div class='row'>
+									<div class="col-sm-6">
+							      <ul>
+											<li><strong>Deliver To</strong>: <%= orders[i].name %><br></li>
+											<li><strong>Location</strong>: <%= orders[i].location %><br></li>
+											<li><strong>Assigned Driver</strong>: <%= orders[i].driver %><br></li>
+											<li><strong>Status</strong>: <%= orders[i].status %><br></li>
+							      </ul>
+									</div>
+									<div class="col-sm-6">
+										<% if(orders[i].driver != "no driver assigned yet") { %>
+										<p>
+											Send a text to this driver:<br>
+											<input type="text-area" name="messageText" placeholder="Enter your message here"/>
+											<button onclick="sms()" class="btn btn-default btn-sm btn-right">Send SMS</button>
+										</p>
+									<% } %>
+									</div>
+								</div><hr>
+							<% } %>
+						<% } %>
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<input name='username' style='display:none;' value=<%= user.local.email %> />
+
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+		<script>
+		  $(function () {
+		    var socket = io();
+		    $('form').submit(function(){
+		      socket.emit('order_created', {
+						from     : $('[name="username"]').val(),
+						name     : $('[name="name"]').val(),
+						location : $('[name="location"]').val(),
+						driver   : 'no driver assigned yet',
+						note     : $('[name="note"]').val()
+					});
+		      return true;
+		    });
+		  });
+
+		    var socket1 = io.connect('https://35.161.219.103/');
+		    var sms = function(){
+		      socket1.emit('message', {
+						from    : $('[name="username"]').val(),
+						message : $('[name="messageText"]').val()
+					});
+					$('[name="messageText"]').val('');
+		      return true;
+		    };
+
+          var socket2 = io.connect('https://52.89.85.45:8081');
+          socket2.on('refresh_view', function () {
+            console.log('refreshing');
+            window.location = '/profile';
+          });
+		</script>
+
+	</div>
+
+</div>
+
+<%- include partials/footer %>

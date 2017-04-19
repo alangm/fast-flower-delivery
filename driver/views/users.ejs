@@ -1,0 +1,24 @@
+<%- include partials/header %>
+<%- include partials/navbar %>
+
+<div class="container">
+	<h1>Available Users:</h1>
+  <% if(users.length > 0) { %>
+		<% for(var i=0; i<users.length; i++) { %>
+			<div class="well col-xs-6">
+				<h3 class="text-center"><span class="fa fa-user"></span> <%= removeQuotes(users[i].fs.firstName) %>
+																						 <%= removeQuotes(users[i].fs.lastName) %></h3>
+				<ul>
+					<li><strong>id</strong>: <%= users[i].fs.id %><br></li>
+					<li><strong>email</strong>: <%= removeQuotes(users[i].fs.email) %><br></li>
+					<li><strong>view checkins</strong>:
+						<a href='/user/checkins?token=<%= users[i].fs.token %>&id=<%= id %>'>Checkins</a><br></li>
+				</ul>
+	  	</div>
+		<% } %>
+  <% } else { %>
+		<p class="lead bg-danger">There are no users to display, sorry.</p><br><br>
+ 	<% } %>
+</div>
+
+<%- include partials/footer %>

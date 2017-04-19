@@ -1,0 +1,22 @@
+
+
+<!-- Fixed navbar -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">
+        <span>
+          <i class="fa fa-truck fa-lg"></i>
+        </span>&nbsp;&nbsp;DRIVER
+      </a>
+    </div>
+
+    <% if(user) { %>
+      <div class="nav navbar-nav navbar-right">
+        <a class="navbar-brand navbar-right" href="/logout">Logout</a>
+      </div>
+    <% } %>
+
+  </div>
+</nav>
+<br><br>
